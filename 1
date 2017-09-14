@@ -1,0 +1,108 @@
+
+# coding: utf-8
+
+# In[37]:
+
+from __future__ import unicode_literals
+
+import multiprocessing as mp
+import pandas as pd
+import string
+from stop_words import get_stop_words
+import regex as re
+from contextlib import closing
+
+
+# In[180]:
+
+pd.options.display.max_colwidth = -1
+pd.options.display.max_columns = None
+
+
+# In[21]:
+
+filepath = '~/Documents/Avito/'
+item_info = pd.read_csv(filepath+'ItemInfo_train.csv', encoding='utf-8')
+# item_info.tail()
+
+
+# In[22]:
+
+# Russian Stopwords
+ru_stopwords = get_stop_words('russian')
+
+
+# In[23]:
+
+def remove_punctuation(text):
+    return re.sub(ur"\p{P}+", "", text)
+
+
+# In[24]:
+
+def clean_text(doc):
+    try:
+        docs = remove_punctuation(doc)
+        docs = docs.lower().split(' ')
+        return [tok for tok in docs if tok not in ru_stopwords]
+    except Exception as e :
+        print(doc)
+        print(e)
+        pass
+# Fill.na() with string
+
+
+# In[25]:
+
+item_info['description']=item_info['description'].fillna('None')
+
+# In[26]:
+
+description = item_info['description']
+
+# In[46]:
+
+with closing(mp.Pool(4)) as p:
+    item_info['description_clean'] = p.map(clean_text,description)
+    p.terminate()
+
+
+# In[ ]:
+
+#item_info['description_clean'] = item_info['description'].apply(clean_text)
+
+
+# In[ ]:
+
+item_info.to_csv('item_info2_train.csv')
+
+
+# In[264]:
+
+#item_info.iloc[0:5]
+
+
+# ### Word2Vec 
+# - compute similarity between 2 documents (`description`)
+
+# In[269]:
+
+from gensim import models, similarities
+
+
+# In[274]:
+
+#description = item_info['description_clean'].tolist()
+
+
+# In[299]:
+
+#model = models.word2vec.Word2Vec(description, sg=1, size=75, window =5,
+                                 min_count=1, workers=3,
+                                seed=1)
+
+
+# In[300]:
+
+#model.wv['телефон']
+
