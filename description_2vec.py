@@ -30,7 +30,9 @@ def clean_text(doc):
     try:
         docs = remove_punctuation(doc).replace('\n', ' ')
         docs = docs.lower().split(' ')
-        return [tok for tok in docs if tok not in ru_stopwords]
+        result =  [tok for tok in docs if tok not in ru_stopwords]
+        print(type(result))
+        return result
     except Exception as e :
         print(doc)
         print(e)
@@ -41,16 +43,21 @@ item_info['description']=item_info['description'].fillna('None')
 description = item_info['description']
 
 start_time = timeit.default_timer()
-item_info['description_clean'] = item_info['description'].apply(clean_text)
 
-#pool = ThreadPool(4)
-#item_info['description_clean'] = pool.map(clean_text,description)
-print(item_info.tail())
+# pandas .apply
+#item_info['description_clean'] = item_info['description'].apply(clean_text)
 
+# MultiThreading
+pool = ThreadPool(4)
+item_info['description_clean'] = pool.map(clean_text,description)
+print(type(item_info['description_clean'][0]))
+
+# MultiPooling
 #with closing(mp.Pool(3)) as p:
 #    item_info['description_clean'] = p.imap(clean_text,description,10)
 #    p.terminate()
 
+print(item_info.tail())
 elapsed = timeit.default_timer()-start_time
 print('Time elapsed: {}'.format(elapsed))
 # Time Elapsed for Thread: 1118.923s = 19 mins
