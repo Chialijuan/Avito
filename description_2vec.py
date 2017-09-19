@@ -24,3 +24,4 @@ model2.save('description_2vec.model')
 
 elapsed = timeit.default_timer()-start_time
 print('Time elapsed: {}'.format(elapsed))
+
