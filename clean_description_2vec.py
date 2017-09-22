@@ -1,47 +1,45 @@
-
-# coding: utf-8
-
 from __future__ import unicode_literals
-
-#import multiprocessing as mp
 from multiprocessing.dummy import Pool as ThreadPool
 import pandas as pd
 import string
 from stop_words import get_stop_words
 import regex as re
-from contextlib import closing
 import timeit
 
-pd.options.display.max_colwidth = -1
-pd.options.display.max_columns = None
+filepath = '~/Documents/Avito/Avito/'
 
-filepath = '~/Documents/Avito/'
-item_info = pd.read_csv(filepath+'ItemInfo_train.csv',encoding='utf-8')
+# Read in as string not unicode 
+item_info = pd.read_csv(filepath+'ItemInfo_train4.csv', usecols=['description_x','description_y'], encoding='utf-8', nrows=400)
 
 print('Length of df: {}'.format(len(item_info)))
 
 # Russian Stopwords
-ru_stopwords = get_stop_words('russian')
+#ru_stopwords = get_stop_words('russian')
 
+# Remove Punctuations and multiple spaces
 def remove_punctuation(text):
-    return re.sub(ur"\p{P}+", "", text)
+    result = re.sub(ur"\p{P}+", "", text)
+    result = re.sub(ur'(\s)\1{1,}', r'\1', result)
+    return result
 
 def clean_text(doc):
     try:
-        docs = remove_punctuation(doc).replace('\n', ' ')
-        docs = docs.lower().split(' ')
-        result =  [tok for tok in docs if tok not in ru_stopwords]
-        print(type(result))
+        docs = remove_punctuation(doc).lower().split()
+        result =  [tok for tok in docs if tok not in get_stop_words('russian')]
+        #print(type(result))
         return result
     except Exception as e :
         print(doc)
         print(e)
         pass
 
-item_info['description']=item_info['description'].fillna('None')
+item_info = item_info.fillna('None')
 
-description = item_info['description']
+#description_x = item_info['description_x']
+#description_y = item_info['description_y']
 
+#item_info.drop(['description_x','description_y'], inplace=True, axis=1)
+print(item_info.columns)
 start_time = timeit.default_timer()
 
 # pandas .apply
@@ -49,19 +47,20 @@ start_time = timeit.default_timer()
 
 # MultiThreading
 pool = ThreadPool(4)
-item_info['description_clean'] = pool.map(clean_text,description)
-print(type(item_info['description_clean'][0]))
+item_info['description_x_clean'] = pool.map(clean_text,item_info['description_x'])
+print(type(item_info['description_x_clean'][0]))
+item_info['description_y_clean'] = pool.map(clean_text,item_info['description_y'])
 
 # MultiPooling
 #with closing(mp.Pool(3)) as p:
 #    item_info['description_clean'] = p.imap(clean_text,description,10)
 #    p.terminate()
 
-print(item_info.tail())
+print(item_info.description_x_clean[398])
 elapsed = timeit.default_timer()-start_time
 print('Time elapsed: {}'.format(elapsed))
 # Time Elapsed for Thread: 1118.923s = 19 mins
 # Time Elapsed for .apply: Killed
 
-#item_info.to_csv('ItemInfo_train2.csv', encoding='utf-8', index=False)
-#print('Saved to ItemInfo_train2.csv')
+item_info.to_csv('test_ItemInfo_train5.csv', columns = ['description_x_clean','description_y_clean'], encoding='utf-8', index=False)
+print('Saved to ItemInfo_train5.csv')
