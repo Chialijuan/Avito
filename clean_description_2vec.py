@@ -9,7 +9,7 @@ import timeit
 filepath = '~/Documents/Avito/Avito/'
 
 # Read in as string not unicode 
-item_info = pd.read_csv(filepath+'ItemInfo_train4.csv', usecols=['description_x','description_y'], encoding='utf-8', nrows=400)
+item_info = pd.read_csv(filepath+'ItemInfo_train4.csv', usecols=['itemID','itemID_2''description_x','description_y'], encoding='utf-8', nrows=10)
 
 print('Length of df: {}'.format(len(item_info)))
 
@@ -24,6 +24,7 @@ def remove_punctuation(text):
 
 def clean_text(doc):
     try:
+        #print(doc)
         docs = remove_punctuation(doc).lower().split()
         result =  [tok for tok in docs if tok not in get_stop_words('russian')]
         #print(type(result))
@@ -56,11 +57,11 @@ item_info['description_y_clean'] = pool.map(clean_text,item_info['description_y'
 #    item_info['description_clean'] = p.imap(clean_text,description,10)
 #    p.terminate()
 
-print(item_info.description_x_clean[398])
+#print(item_info.description_x_clean[398])
 elapsed = timeit.default_timer()-start_time
 print('Time elapsed: {}'.format(elapsed))
 # Time Elapsed for Thread: 1118.923s = 19 mins
 # Time Elapsed for .apply: Killed
 
-item_info.to_csv('test_ItemInfo_train5.csv', columns = ['description_x_clean','description_y_clean'], encoding='utf-8', index=False)
+item_info.to_csv('test_ItemInfo_train5.csv', columns = ['itemID','itemID_2''description_x_clean','description_y_clean'], encoding='utf-8', index=False)
 print('Saved to ItemInfo_train5.csv')
