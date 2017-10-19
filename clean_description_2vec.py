@@ -6,10 +6,10 @@ from stop_words import get_stop_words
 import regex as re
 import timeit
 
-filepath = '~/Documents/Avito/Avito/'
+#filepath = '~/Documents/Avito/Avito/'
 
 # Read in as string not unicode 
-item_info = pd.read_csv(filepath+'ItemInfo_train4.csv', usecols=['itemID','itemID_2''description_x','description_y'], encoding='utf-8', nrows=10)
+item_info = pd.read_csv('ItemInfo_test_mapped.csv', usecols=['itemID','itemID_2','description_x','description_y'], encoding='utf-8')
 
 print('Length of df: {}'.format(len(item_info)))
 
@@ -63,5 +63,5 @@ print('Time elapsed: {}'.format(elapsed))
 # Time Elapsed for Thread: 1118.923s = 19 mins
 # Time Elapsed for .apply: Killed
 
-item_info.to_csv('test_ItemInfo_train5.csv', columns = ['itemID','itemID_2''description_x_clean','description_y_clean'], encoding='utf-8', index=False)
-print('Saved to ItemInfo_train5.csv')
+item_info.to_csv('ItemInfo_test5.csv', columns = ['itemID','itemID_2','description_x_clean','description_y_clean'], encoding='utf-8', index=False)
+print('Saved to ItemInfo_test5.csv')

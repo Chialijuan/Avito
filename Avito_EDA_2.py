@@ -11,7 +11,7 @@ import math
 
 print('Loading in data..')
 filepath = '../'
-item_info = pd.read_csv(filepath+'ItemInfo_train.csv',encoding = 'utf-8')
+item_info = pd.read_csv(filepath+'ItemInfo_train_map.csv',encoding = 'utf-8')
 
 
 #### Mapping for parentCategoryID, regionID
@@ -41,45 +41,6 @@ def pair_features(items):
 
 
 
-#####  Mapping `lat`, `lon` using MapQuest
-#
-## Obtain api key from MapQuest
-#
-## Remove newline character when reading from file
-#key = open('/home/juan/Documents/Avito/MapQuest_Key.txt','r').read().strip()
-#osm = ('http://www.mapquestapi.com/geocoding/v1/reverse?key='+key+'&location=')
-#
-##### Feature: Street, Neighborhood, City, State, PostalCode, GeocodeQuality
-#
-## lat lon should be in str
-#
-#def latlon(lat,lon, code):
-#    srch = osm + str(lat)+','+ str(lon)+'&outFormat=xml'
-#    print(srch)
-#    #print('Scraping from MapQuest..')
-#    r = re.get(srch)
-#    soup = BeautifulSoup(r.content,'lxml')
-#
-#    return {'Street'+code: get_str(soup.street),
-#        'Neighborhood'+code: get_str(soup.find(type="Neighborhood")),
-#        'City'+code: get_str(soup.find(type="City")),
-#        'State'+code:get_str(soup.find(type="State")),
-#           'postalCode'+code: get_str(soup.postalcode),
-#           'geocodeQuality'+code: get_str(soup.geocodequality),}
-#
-#def get_str(tag):
-#    if tag is None:
-#        return 'Nil'
-#    else:
-#        return tag.string
-#
-#def df_latlon(df,lat,lon,code):
-#    df_ll = df.apply(lambda x: pd.Series(latlon(x[lat], x[lon], code)), axis=1)
-#    return pd.concat([df,df_ll],axis=1)
-
-
-# ### Get features and merge ItemID_2 info with ItemID_1
-print('Mapping pair features..')
 df3 = pair_features(item_info)
 #print('Mapping lat lon..')
 #df1 = df_latlon(df.loc[200:300,:], 'lat_x', 'lon_x', '_x')

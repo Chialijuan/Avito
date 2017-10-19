@@ -13,9 +13,8 @@ pd.options.display.max_colwidth = -1
 pd.options.display.max_columns = None
 
 
-filepath = '~/Documents/Avito/'
-df = pd.read_csv('ItemInfo_train5.csv',encoding='utf-8'
-                 ,usecols=['description_x_clean','description_y_clean']
+# Substitute for train/test 
+df = pd.read_csv('ItemInfo_test5.csv',encoding='utf-8'
                  ,converters={'description_x_clean': lambda x: x.strip(u'[]').split(', ')
                  ,'description_y_clean': lambda x: x.strip('[]').split(', ')})
                              
@@ -89,6 +88,6 @@ print(df.head())
 elapsed = timeit.default_timer() - start_time
 print('Time elapsed: {}'.format(elapsed))
 
-df.to_csv('description_similarity.csv', encoding='utf-8', index=False)
-print('Saved to description_similarity.csv')
+df.to_csv('description_similarity_test.csv', encoding='utf-8', index=False)
+print('Saved to description_similarity_test.csv')
 

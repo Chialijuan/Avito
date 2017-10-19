@@ -4,9 +4,10 @@ import jellyfish
 import pandas as pd 
 import numpy as np
 
-item_info = pd.read_csv('../ItemInfo_train.csv', encoding='utf-8',usecols =['itemID','title'], converters={'title':unicode})
+# Substitute for train/test
+item_info = pd.read_csv('../ItemInfo_test.csv', encoding='utf-8',usecols =['itemID','title'], converters={'title':unicode})
 
-item_pairs = pd.read_csv('../ItemPairs_train.csv', encoding='utf-8',usecols=['itemID_1','itemID_2'])
+item_pairs = pd.read_csv('../ItemPairs_test.csv', encoding='utf-8',usecols=['itemID_1','itemID_2'])
 item_pairs.rename(columns={'itemID_1':'itemID'}, inplace=True)
 
 df = pd.merge(item_info,item_pairs, on='itemID')
@@ -36,4 +37,4 @@ df.drop(['title_x','title_y'], inplace=True,axis=1)
 
 print(df.head())
 print('Saving to title_sim.csv...')
-df.to_csv('title_sim.csv', encoding='utf-8', index=False)
+df.to_csv('title_sim_test.csv', encoding='utf-8', index=False)
