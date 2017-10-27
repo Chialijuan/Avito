@@ -1,3 +1,6 @@
+"""
+This module cleans the text description by removing punctuations, stopwords and performing tokenization.
+"""
 from __future__ import unicode_literals
 from multiprocessing.dummy import Pool as ThreadPool
 import pandas as pd
@@ -63,5 +66,5 @@ print('Time elapsed: {}'.format(elapsed))
 # Time Elapsed for Thread: 1118.923s = 19 mins
 # Time Elapsed for .apply: Killed
 
-item_info.to_csv('ItemInfo_test5.csv', columns = ['itemID','itemID_2','description_x_clean','description_y_clean'], encoding='utf-8', index=False)
 print('Saved to ItemInfo_test5.csv')
+item_info.to_csv('ItemInfo_test5.csv', columns = ['itemID','itemID_2','description_x_clean','description_y_clean'], encoding='utf-8', index=False)

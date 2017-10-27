@@ -1,10 +1,5 @@
-
-"""Mapping featues of duplicate ads (ItemID and ItemID_2)
-
-lendiff_imagearray
-priceDifference
-latlonDifference
-
+"""
+This module maps features of duplicate ads (ItemID and ItemID_2), which includes the differences in price, latlon and length of image array.
 """
 
 from __future__ import unicode_literals
@@ -66,6 +61,6 @@ def haversine(lat1, lon1, lat2, lon2):
 
 df['latlonDifference'] = df.apply(lambda x: haversine(x['lat_x'], x['lon_x'], x['lat_y'], x['lon_y']) ,axis=1)
 print(df.head())
-print('Saving to ItemInfo_test_mapped.csv...')
+#print('Saving to ItemInfo_test_mapped.csv...')
 #df.to_csv('ItemInfo_test_mapped.csv', encoding='utf-8', index=False)
 

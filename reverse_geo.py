@@ -1,11 +1,13 @@
-""" Mapping `lat`, `lon` using MapQuest API key
-
+""" 
+This module creates reverse geocoding features by mapping `lat`, `lon` using MapQuest API key
 """
+
 from __future__ import unicode_literals
 import pandas as pd
 import requests as re
 from bs4 import BeautifulSoup
 import time 
+
 # Substitute for train/test 
 # Load in data
 item_info = pd.read_csv('ItemInfo_test_mapped.csv', encoding='utf-8', usecols =['itemID','itemID_2','lat_x', 'lon_x'])

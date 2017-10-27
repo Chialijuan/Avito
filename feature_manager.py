@@ -1,6 +1,7 @@
-"""Combine all new features into a single file
-
 """
+This module combine all new features into a single file
+"""
+
 from __future__ import unicode_literals
 import pandas as pd 
 

@@ -1,5 +1,7 @@
-"""Merge all of reverse_geo data into single file
 """
+This module merges all reverse_geo data into single file
+"""
+
 from __future__ import unicode_literals
 import pandas as pd 
 

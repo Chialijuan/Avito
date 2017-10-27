@@ -1,3 +1,6 @@
+"""
+Return distance similarities between titles of itemID_1 and itemID_2
+"""
 from __future__ import unicode_literals
 from fuzzywuzzy import fuzz
 import jellyfish

@@ -1,7 +1,6 @@
-
-
-# #### Feature engineering for intersecting BOW and non intersecting BOW 
-
+"""
+This module creates features for intersecting BOW and non-intersecting BOW in description.
+"""
 from __future__ import unicode_literals
 import pandas as pd
 
