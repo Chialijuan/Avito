@@ -5,9 +5,8 @@
 from __future__ import unicode_literals
 import pandas as pd
 import xgboost as xgb
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.metrics import roc_auc_score, roc_curve
 import matplotlib.pyplot as plt
@@ -20,16 +19,16 @@ usecols_train = ['itemID', 'categoryID_x', 'title_x', 'price_x', 'locationID_x',
 usecols_test = ['id','itemID', 'categoryID_x', 'title_x', 'price_x', 'locationID_x', 'itemID_2', 'lat_x', 'lon_y', 'categoryID_y', 'title_y', 'price_y', 'locationID_y', 'lat_y', 'lon_y', 'parentCategoryID_y', 'parentCategoryID_x', 'regionID_x', 'regionID_y', 'lendiff_imagearray', 'priceDifference', 'latlonDifference', 'fuzz_ratio', 'lev_dist', 'jaro_dist', 'jarow_dist', 'description_x_clean', 'description_y_clean', 'intersect_BOW','sym_diff_BOW','clusters','desc_sim'] 
 
 
-#train = pd.read_csv('ItemInfo_trainfull.csv', encoding='utf-8', usecols=usecols_train)
-test = pd.read_csv('ItemInfo_testfull.csv', encoding='utf-8', usecols=usecols_test)
+train = pd.read_csv('../ItemInfo_trainfull.csv', encoding='utf-8', usecols=usecols_train)
+test = pd.read_csv('../ItemInfo_testfull.csv', encoding='utf-8', usecols=usecols_test)
 
 #print(train.head())
 print(test.head())
 # Null values are numerical, impute with zero
-#train = train.fillna(value=0,axis=1)
+train = train.fillna(value=0,axis=1)
 test = test.fillna(value=0, axis=1)
 
-#nonnum_columns = [key for key in dict(train.dtypes) if dict(train.dtypes)[key] in ['object']]
+nonnum_columns = [key for key in dict(train.dtypes) if dict(train.dtypes)[key] in ['object']]
 nonnum_columns = [key for key in dict(test.dtypes) if dict(test.dtypes)[key] in ['object']]
 
 def labelEncoder(data):
@@ -42,27 +41,27 @@ def labelEncoder(data):
         data[feature] = le.fit_transform(data[feature])
     return data
 
-#train = labelEncoder(train)
+train = labelEncoder(train)
 test = labelEncoder(test)
 
 #print(train.head())
 # Training of model
 #model_1 = xgb.XGBClassifier(learning_rate=0.05, max_depth=6, min_child_weight=4, n_estimators=1000)
-#model = xgb.XGBClassifier(learning_rate=0.1,gamma=0,max_depth=6,min_child_weight=1,max_delta_step=0,subsample=1,colsample_bytree=1,silent=1,seed=0,reg_lambda=1,reg_alpha=0)
+model = xgb.XGBClassifier(learning_rate=0.1,gamma=0,max_depth=20,min_child_weight=1,max_delta_step=0,subsample=1,colsample_bytree=1,silent=1,seed=0,reg_lambda=1,reg_alpha=0, n_estimators=1000)
 #
-#y = train['isDuplicate']
-#x = train.drop('isDuplicate', axis=1)
+y = train['isDuplicate']
+x = train.drop('isDuplicate', axis=1)
 #
-#seed = 1
-#test_size = 0.77
-#x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = test_size, random_state = seed)
-#
+seed = 1
+score = cross_val_score(model, x, y, cv=6, scoring='roc_auc')
+print("Accuracy: {} (+/- {}) [{}]".format(scores.mean(), scores.std(), label))
+
 #gbm_train = model.fit(x_train,y_train)
-#gbm_pred = model_1.fit(x, y)
+gbm_pred = model.fit(x, y)
 from sklearn.externals import joblib
 
-#print('Saving xgBoost model...')
-#joblib.dump(gbm_pred, 'gbm_pred_model_1.pkl', compress=True)
+print('Saving xgBoost model...')
+joblib.dump(gbm_pred, 'gbm_pred_model_1.pkl', compress=True)
 
 id = test['id']
 test.drop('id', axis=1, inplace=True)
